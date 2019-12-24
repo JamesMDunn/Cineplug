@@ -40,6 +40,8 @@ target 'Movie' do
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
+  pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
+
   target 'MovieTests' do
     inherit! :search_paths
     # Pods for testing

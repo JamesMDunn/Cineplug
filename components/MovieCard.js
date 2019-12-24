@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
-const NewMoviesCard = props => {
+const MovieCard = props => {
   return (
     <TouchableOpacity
       onPress={() => props.handleMovieClick(props.movie)}
@@ -13,7 +13,8 @@ const NewMoviesCard = props => {
           priority: FastImage.priority.normal,
           uri: `https://image.tmdb.org/t/p/original${props.movie.poster_path}`,
         }}
-        style={{width: 255, height: 360, borderRadius: 10}}></FastImage>
+        style={{width: 200, height: 200, borderRadius: 10}}></FastImage>
+      <Text>{props.movie.title}</Text>
     </TouchableOpacity>
   );
 };
@@ -24,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewMoviesCard;
+export default MovieCard;

@@ -1,23 +1,15 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Text, FlatList, ScrollView} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import {WebView} from 'react-native-webview';
 import ActorCard from '../ActorCard';
+import FastImage from 'react-native-fast-image';
 
 const MoviePage = props => {
   const genre = props.genres.filter(
     genre => genre.id === props.movie.genre_ids[0],
   );
-  // console.log(props.castList);
 
   return (
     <ScrollView style={{flex: 1}}>
@@ -34,16 +26,17 @@ const MoviePage = props => {
             color: 'white',
           }}
         />
-        <Image
+        <FastImage
           resizeMode={'stretch'}
           source={{
+            priority: FastImage.priority.normal,
             uri: `https://image.tmdb.org/t/p/original${props.movie.poster_path}`,
           }}
           style={{
             width: 410,
             height: 500,
             opacity: 0.5,
-          }}></Image>
+          }}></FastImage>
       </View>
       <View style={{marginLeft: 14}}>
         <Text style={styles.title}>{props.movie.title}</Text>
@@ -67,6 +60,7 @@ const MoviePage = props => {
               <WebView
                 mediaPlaybackRequiresUserAction={true}
                 javaScriptEnabled={true}
+                allowsFullscreenVideo={true}
                 domStorageEnabled={true}
                 source={{uri: `https://www.youtube.com/embed/${video.key}`}}
                 style={{
@@ -80,7 +74,7 @@ const MoviePage = props => {
           ))}
         </ScrollView>
         <Text style={{color: 'white', marginTop: 10, marginBottom: 10}}>
-          Actors
+          Cast and crew
         </Text>
         <View style={{flex: 1}}>
           <FlatList

@@ -1,18 +1,11 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const ActorCard = props => {
   return (
     <View style={{marginRight: 15, height: 240}}>
-      <Image
+      <FastImage
         resizeMode={'contain'}
         style={{height: 150, width: 100, borderRadius: 10}}
         source={{

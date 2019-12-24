@@ -1,5 +1,5 @@
 {
-  "name": "Movie",
+  "name": "CinePlug",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "dotenv": "^8.2.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
+    "react-native-fast-image": "^7.0.2",
     "react-native-gesture-handler": "^1.5.2",
     "react-native-reanimated": "^1.4.0",
     "react-native-svg": "^9.13.6",

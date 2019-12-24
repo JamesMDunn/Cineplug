@@ -1,16 +1,17 @@
 import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
   FlatList,
+  ScrollView,
+  SectionList,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons';
 import NewMoviesCard from '../NewMoviesCard';
 import MoviePage from './MoviePage';
+import MovieCard from '../MovieCard';
 
 import {REACT_APP_MOVIE_API} from 'react-native-dotenv';
 
@@ -24,6 +25,7 @@ class HomeScreen extends React.Component {
     this.state = {
       newReleases: [],
       currentMovie: {},
+      mostPopular: [],
       genres: [],
       movieVideos: [],
       castList: [],
@@ -39,6 +41,7 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     this.getNewReleases();
     this.getGenres();
+    this.getMostPopular();
   }
 
   handleMovieBackButton() {
@@ -78,6 +81,14 @@ class HomeScreen extends React.Component {
     });
   }
 
+  getMostPopular() {
+    fetch(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${REACT_APP_MOVIE_API}&language=en-US&page=1`,
+    )
+      .then(res => res.json())
+      .then(res => this.setState({mostPopular: res.results}));
+  }
+
   getNewReleases() {
     fetch(
       `https://api.themoviedb.org/3/movie/now_playing?api_key=${REACT_APP_MOVIE_API}&language=en-US&page=1`,
@@ -100,23 +111,46 @@ class HomeScreen extends React.Component {
               movie={this.state.currentMovie}
             />
           ) : (
-            <>
+            <ScrollView>
               <View style={styles.logoContainer}>
-                <Text style={styles.logo}>MVIES</Text>
+                <Text style={styles.logo}>CinePlug</Text>
               </View>
               <View style={{flex: 1}}>
-                <FlatList
-                  horizontal={true}
-                  data={this.state.newReleases}
-                  keyExtractor={item => item.id}
-                  renderItem={({item}) => (
-                    <NewMoviesCard
-                      handleMovieClick={this.handleMovieClick}
-                      movie={item}
-                    />
-                  )}></FlatList>
+                <Text
+                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                  New Releases
+                </Text>
+                <View style={{marginBottom: 10}}>
+                  <FlatList
+                    horizontal={true}
+                    data={this.state.newReleases}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <NewMoviesCard
+                        handleMovieClick={this.handleMovieClick}
+                        movie={item}
+                      />
+                    )}></FlatList>
+                </View>
+                <Text
+                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                  Most Popular
+                </Text>
+                <View style={{flex: 1}}>
+                  <FlatList
+                    numColumns={2}
+                    horizontal={false}
+                    data={this.state.mostPopular}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <MovieCard
+                        handleMovieClick={this.handleMovieClick}
+                        movie={item}
+                      />
+                    )}></FlatList>
+                </View>
               </View>
-            </>
+            </ScrollView>
           )}
         </View>
       </>
@@ -138,6 +172,7 @@ const styles = StyleSheet.create({
   logo: {
     color: 'white',
     fontSize: 30,
+    marginTop: 10,
   },
 });
 
