@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'Movie' do
-  # Pods for Movie
+target 'CinePlug' do
+  # Pods for CinePlug
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -42,7 +42,7 @@ target 'Movie' do
 
   pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'
 
-  target 'MovieTests' do
+  target 'CinePlugTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -50,10 +50,10 @@ target 'Movie' do
   use_native_modules!
 end
 
-target 'Movie-tvOS' do
-  # Pods for Movie-tvOS
+target 'CinePlug-tvOS' do
+  # Pods for CinePlug-tvOS
 
-  target 'Movie-tvOSTests' do
+  target 'CinePlug-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

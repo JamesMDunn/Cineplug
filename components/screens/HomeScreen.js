@@ -10,7 +10,6 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons';
 import NewMoviesCard from '../NewMoviesCard';
-import MoviePage from './MoviePage';
 import MovieCard from '../MovieCard';
 
 import {REACT_APP_MOVIE_API} from 'react-native-dotenv';
@@ -29,11 +28,10 @@ class HomeScreen extends React.Component {
       genres: [],
       movieVideos: [],
       castList: [],
-      movieSelected: false,
     };
     this.handleMovieClick = this.handleMovieClick.bind(this);
-    this.handleMovieBackButton = this.handleMovieBackButton.bind(this);
   }
+
   static navigationOptions = {
     tabBarIcon: TabIcon,
   };
@@ -44,16 +42,12 @@ class HomeScreen extends React.Component {
     this.getMostPopular();
   }
 
-  handleMovieBackButton() {
-    this.setState({movieSelected: false});
-  }
-
-  getCastList(id) {
-    fetch(
+  async getCastList(id) {
+    let response = await fetch(
       `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${REACT_APP_MOVIE_API}`,
-    )
-      .then(res => res.json())
-      .then(res => this.setState({castList: res.cast}));
+    );
+    let json = await response.json();
+    return json.cast;
   }
 
   getGenres() {
@@ -64,21 +58,32 @@ class HomeScreen extends React.Component {
       .then(res => this.setState({genres: res.genres}));
   }
 
-  getMovieVideos(id) {
-    fetch(
+  async getMovieVideos(id) {
+    let response = await fetch(
       `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${REACT_APP_MOVIE_API}&language=en-US`,
-    )
-      .then(res => res.json())
-      .then(res => this.setState({movieVideos: res.results}));
+    );
+    let json = await response.json();
+    return json.results;
   }
 
-  handleMovieClick(movie) {
-    this.getMovieVideos(movie.id);
-    this.getCastList(movie.id);
-    this.setState({
-      currentMovie: movie,
-      movieSelected: true,
-    });
+  async handleMovieClick(movie) {
+    let movieVideos = await this.getMovieVideos(movie.id);
+    let castList = await this.getCastList(movie.id);
+    this.setState(
+      {
+        currentMovie: movie,
+        castList: castList,
+        movieVideos: movieVideos,
+      },
+      () => {
+        this.props.navigation.navigate('MoviePage', {
+          movie: this.state.currentMovie,
+          genres: this.state.genres,
+          cast: this.state.castList,
+          movieVideos: this.state.movieVideos,
+        });
+      },
+    );
   }
 
   getMostPopular() {
@@ -102,56 +107,44 @@ class HomeScreen extends React.Component {
     return (
       <>
         <View style={styles.container}>
-          {this.state.movieSelected ? (
-            <MoviePage
-              castList={this.state.castList}
-              movieVideos={this.state.movieVideos}
-              handleMovieBackButton={this.handleMovieBackButton}
-              genres={this.state.genres}
-              movie={this.state.currentMovie}
-            />
-          ) : (
-            <ScrollView>
-              <View style={styles.logoContainer}>
-                <Text style={styles.logo}>CinePlug</Text>
+          <ScrollView>
+            <View style={styles.logoContainer}>
+              <Text style={styles.logo}>CinePlug</Text>
+            </View>
+            <View style={{flex: 1}}>
+              <Text style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                New Releases
+              </Text>
+              <View style={{marginBottom: 10}}>
+                <FlatList
+                  horizontal={true}
+                  data={this.state.newReleases}
+                  keyExtractor={item => item.id}
+                  renderItem={({item}) => (
+                    <NewMoviesCard
+                      handleMovieClick={this.handleMovieClick}
+                      movie={item}
+                    />
+                  )}></FlatList>
               </View>
+              <Text style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                Most Popular
+              </Text>
               <View style={{flex: 1}}>
-                <Text
-                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
-                  New Releases
-                </Text>
-                <View style={{marginBottom: 10}}>
-                  <FlatList
-                    horizontal={true}
-                    data={this.state.newReleases}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                      <NewMoviesCard
-                        handleMovieClick={this.handleMovieClick}
-                        movie={item}
-                      />
-                    )}></FlatList>
-                </View>
-                <Text
-                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
-                  Most Popular
-                </Text>
-                <View style={{flex: 1}}>
-                  <FlatList
-                    numColumns={2}
-                    horizontal={false}
-                    data={this.state.mostPopular}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                      <MovieCard
-                        handleMovieClick={this.handleMovieClick}
-                        movie={item}
-                      />
-                    )}></FlatList>
-                </View>
+                <FlatList
+                  numColumns={2}
+                  horizontal={false}
+                  data={this.state.mostPopular}
+                  keyExtractor={item => item.id}
+                  renderItem={({item}) => (
+                    <MovieCard
+                      handleMovieClick={this.handleMovieClick}
+                      movie={item}
+                    />
+                  )}></FlatList>
               </View>
-            </ScrollView>
-          )}
+            </View>
+          </ScrollView>
         </View>
       </>
     );
