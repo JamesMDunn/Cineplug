@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import HomeScreen from '../screens/HomeScreen';
 import MoviePage from '../screens/MoviePage';
+import Search from '../screens/Search';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons';
 
@@ -12,6 +13,15 @@ const movieFlow = createStackNavigator({
     screen: HomeScreen,
 
     navigationOptions: {header: null},
+  },
+  SearchScreen: {
+    screen: Search,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#141414',
+      },
+      headerTintColor: 'white',
+    },
   },
   MoviePage: {
     screen: MoviePage,
