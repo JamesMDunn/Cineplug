@@ -5,13 +5,13 @@ import {createStackNavigator} from 'react-navigation-stack';
 import HomeScreen from '../screens/HomeScreen';
 import MoviePage from '../screens/MoviePage';
 import Search from '../screens/Search';
+import Actor from '../screens/Actor';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons';
 
 const movieFlow = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen,
-
     navigationOptions: {header: null},
   },
   SearchScreen: {
@@ -25,6 +25,15 @@ const movieFlow = createStackNavigator({
   },
   MoviePage: {
     screen: MoviePage,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#141414',
+      },
+      headerTintColor: 'white',
+    },
+  },
+  ActorPage: {
+    screen: Actor,
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#141414',

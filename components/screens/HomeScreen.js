@@ -13,6 +13,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome, faSearch} from '@fortawesome/free-solid-svg-icons';
 import NewMoviesCard from '../NewMoviesCard';
 import MovieCard from '../MovieCard';
+import Loading from '../Loading';
 
 import {REACT_APP_MOVIE_API} from 'react-native-dotenv';
 
@@ -30,6 +31,7 @@ class HomeScreen extends React.Component {
       genres: [],
       movieVideos: [],
       castList: [],
+      isLoading: true,
     };
     this.handleMovieClick = this.handleMovieClick.bind(this);
   }
@@ -83,6 +85,7 @@ class HomeScreen extends React.Component {
           genres: this.state.genres,
           cast: this.state.castList,
           movieVideos: this.state.movieVideos,
+          movieClick: this.handleMovieClick,
         });
       },
     );
@@ -93,7 +96,7 @@ class HomeScreen extends React.Component {
       `https://api.themoviedb.org/3/movie/popular?api_key=${REACT_APP_MOVIE_API}&language=en-US&page=1`,
     )
       .then(res => res.json())
-      .then(res => this.setState({mostPopular: res.results}));
+      .then(res => this.setState({mostPopular: res.results, isLoading: false}));
   }
 
   getNewReleases() {
@@ -108,60 +111,66 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <>
-        <View style={styles.container}>
-          <StatusBar backgroundColor="#000000" />
-          <ScrollView>
-            <View style={styles.logoContainer}>
-              <Text style={styles.logo}>CinePlug</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate('SearchScreen', {
-                    movieFunction: this.handleMovieClick,
-                  })
-                }>
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  color={'white'}
-                  size={30}
-                  style={{marginTop: 20, marginRight: 10}}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{flex: 1}}>
-              <Text style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
-                New Releases
-              </Text>
-              <View style={{marginBottom: 10}}>
-                <FlatList
-                  horizontal={true}
-                  data={this.state.newReleases}
-                  keyExtractor={item => item.id}
-                  renderItem={({item}) => (
-                    <NewMoviesCard
-                      handleMovieClick={this.handleMovieClick}
-                      movie={item}
-                    />
-                  )}></FlatList>
+        {this.state.isLoading ? (
+          <Loading />
+        ) : (
+          <View style={styles.container}>
+            <StatusBar backgroundColor="#000000" />
+            <ScrollView>
+              <View style={styles.logoContainer}>
+                <Text style={styles.logo}>CinePlug</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('SearchScreen', {
+                      movieFunction: this.handleMovieClick,
+                    })
+                  }>
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    color={'white'}
+                    size={30}
+                    style={{marginTop: 20, marginRight: 10}}
+                  />
+                </TouchableOpacity>
               </View>
-              <Text style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
-                Most Popular
-              </Text>
               <View style={{flex: 1}}>
-                <FlatList
-                  numColumns={2}
-                  horizontal={false}
-                  data={this.state.mostPopular}
-                  keyExtractor={item => item.id}
-                  renderItem={({item}) => (
-                    <MovieCard
-                      handleMovieClick={this.handleMovieClick}
-                      movie={item}
-                    />
-                  )}></FlatList>
+                <Text
+                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                  New Releases
+                </Text>
+                <View style={{marginBottom: 10}}>
+                  <FlatList
+                    horizontal={true}
+                    data={this.state.newReleases}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <NewMoviesCard
+                        handleMovieClick={this.handleMovieClick}
+                        movie={item}
+                      />
+                    )}></FlatList>
+                </View>
+                <Text
+                  style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
+                  Most Popular
+                </Text>
+                <View style={{flex: 1}}>
+                  <FlatList
+                    numColumns={2}
+                    horizontal={false}
+                    data={this.state.mostPopular}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                      <MovieCard
+                        handleMovieClick={this.handleMovieClick}
+                        movie={item}
+                      />
+                    )}></FlatList>
+                </View>
               </View>
-            </View>
-          </ScrollView>
-        </View>
+            </ScrollView>
+          </View>
+        )}
       </>
     );
   }
