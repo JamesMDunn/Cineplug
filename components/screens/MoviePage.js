@@ -7,10 +7,16 @@ import ActorCard from '../ActorCard';
 import FastImage from 'react-native-fast-image';
 
 const MoviePage = props => {
-  const {movie, cast, movieVideos, genres} = props.navigation.state.params;
+  const {
+    movie,
+    cast,
+    movieVideos,
+    genres,
+    movieClick,
+  } = props.navigation.state.params;
   const genre = genres.filter(genre => genre.id === movie.genre_ids[0]);
 
-  // console.log(props.navigation.state.params);
+  // console.log('MOVIE PAGE ----> ', props.navigation.state.params.movieClick);
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#000000'}}>
@@ -68,7 +74,13 @@ const MoviePage = props => {
             horizontal={true}
             data={cast}
             keyExtractor={(item, index) => item.cast_id}
-            renderItem={({item}) => <ActorCard actor={item} />}></FlatList>
+            renderItem={({item}) => (
+              <ActorCard
+                actor={item}
+                navigation={props.navigation}
+                movieClick={movieClick}
+              />
+            )}></FlatList>
         </View>
       </View>
     </ScrollView>

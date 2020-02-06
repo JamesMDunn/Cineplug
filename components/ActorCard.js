@@ -1,10 +1,17 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 const ActorCard = props => {
   return (
-    <View style={{marginRight: 15, height: 240}}>
+    <TouchableOpacity
+      onPress={() =>
+        props.navigation.navigate('ActorPage', {
+          currentActor: props.actor,
+          movieClick: props.movieClick,
+        })
+      }
+      style={{marginRight: 15, height: 240}}>
       <FastImage
         resizeMode={'contain'}
         style={{height: 150, width: 100, borderRadius: 10}}
@@ -27,7 +34,7 @@ const ActorCard = props => {
           {props.actor.character}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
