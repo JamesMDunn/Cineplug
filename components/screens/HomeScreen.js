@@ -6,9 +6,11 @@ import {
   FlatList,
   ScrollView,
   SectionList,
+  TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faHome} from '@fortawesome/free-solid-svg-icons';
+import {faHome, faSearch} from '@fortawesome/free-solid-svg-icons';
 import NewMoviesCard from '../NewMoviesCard';
 import MovieCard from '../MovieCard';
 
@@ -107,9 +109,23 @@ class HomeScreen extends React.Component {
     return (
       <>
         <View style={styles.container}>
+          <StatusBar backgroundColor="#000000" />
           <ScrollView>
             <View style={styles.logoContainer}>
               <Text style={styles.logo}>CinePlug</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('SearchScreen', {
+                    movieFunction: this.handleMovieClick,
+                  })
+                }>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  color={'white'}
+                  size={30}
+                  style={{marginTop: 20, marginRight: 10}}
+                />
+              </TouchableOpacity>
             </View>
             <View style={{flex: 1}}>
               <Text style={{color: 'white', marginLeft: 10, marginBottom: 10}}>
@@ -159,7 +175,8 @@ const styles = StyleSheet.create({
   logoContainer: {
     flex: 0.1,
     alignContent: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     paddingLeft: 10,
   },
   logo: {
